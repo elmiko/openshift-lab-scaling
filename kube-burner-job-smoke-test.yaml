@@ -1,0 +1,20 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: kube-burner-runner
+  namespace: kb-burner
+spec:
+  template:
+    spec:
+      serviceAccountName: kube-burner-user
+      containers:
+        - name: kube-burner
+          image: quay.io/kube-burner/kube-burner:v1.8.2
+          args:
+            - "ocp"
+            - "cluster-density-v2"
+            - "--iterations=1"
+            - "--churn-duration=10m"
+            - "--churn-delay=15m"
+      restartPolicy: Never
+  backoffLimit: 4
