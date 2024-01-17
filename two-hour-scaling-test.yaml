@@ -73,6 +73,6 @@ spec:
                 - "cluster-scaling"
                 - "--iterations=1"
                 - "--churn-duration=10m"
-                - "--churn-delay=15m"
+                - "--churn-delay=25m"
           restartPolicy: "Never"
 
