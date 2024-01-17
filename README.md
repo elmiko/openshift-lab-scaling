@@ -8,3 +8,4 @@ templates for use with lab-scaling experiments
 
 **Test stuff**
 * `kube-burner-job-smoke-test.yaml` - a job to test the basic mechanics of running kube-burner in a pod.
+* `kube-burner-job-basic.yaml` - a job with custom kube-burner image using the cluster-scaling workflow.

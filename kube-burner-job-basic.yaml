@@ -1,0 +1,20 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: kube-burner-runner-basic
+  namespace: kb-burner
+spec:
+  template:
+    spec:
+      serviceAccountName: kube-burner-user
+      containers:
+        - name: kube-burner
+          image: quay.io/elmiko/kube-burner:latest
+          args:
+            - "ocp"
+            - "cluster-scaling"
+            - "--iterations=1"
+            - "--churn-duration=10m"
+            - "--churn-delay=15m"
+      restartPolicy: Never
+  backoffLimit: 4
