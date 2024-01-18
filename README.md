@@ -13,3 +13,6 @@ These run themselves, no changes needed
 
 These are CronJobs and should be checked before running to ensure that the schedules are correct.
 * `two-hour-scaling-test.yaml` - a series of 3 jobs that will run over the course of 2 hours, scaling the cluster out and in during the process.
+
+**Tool to help**
+* `pykb-runner` - this directory contains a wrapper script for executing serial kube-runner runs from within the cluster.
