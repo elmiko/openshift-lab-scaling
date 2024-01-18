@@ -1,78 +1,47 @@
-# README FIRST - the schedule and timeZone fields should be updated before running this manifest.
-# first job will run for 15 minutes, should not force scale out
-apiVersion: batch/v1
-kind: CronJob
+# create configmap with source data for pykb runner
+apiVersion: v1
+kind: ConfigMap
 metadata:
-  name: burner-1
+  name: pykb-config
   namespace: kb-burner
-spec:
-  timeZone: EST
-  schedule: "5 15 * * *"
-  jobTemplate:
-    spec:
-      template:
-        spec:
-          serviceAccountName: kube-burner-user
-          containers:
-            - name: kube-burner
-              image: quay.io/elmiko/kube-burner:latest
-              args:
-                - "ocp"
-                - "cluster-scaling"
-                - "--iterations=4"
-                - "--churn-duration=10m"
-                - "--churn-delay=15m"
-          restartPolicy: "Never"
+data:
+  config.yaml: |
+    runs:
+      - iterations: 4
+        churn-duration: 10m
+        churn-delay: 15m
+      - iterations: 6
+        churn-duration: 10m
+        churn-delay: 45m
+      - iterations: 5
+        churn-duration: 10m
+        churn-delay: 30m
+      - iterations: 1
+        churn-duration: 10m
+        churn-delay: 30m
 
 ---
-# second job will run for 45 minutes and should force scale out
+# job to start the runner
 apiVersion: batch/v1
-kind: CronJob
+kind: Job
 metadata:
-  name: burner-2
+  name: pykb-runner
   namespace: kb-burner
 spec:
-  timeZone: EST
-  schedule: "25 15 * * *" # allow 5 minutes for cleanup of previous artifacts
-  jobTemplate:
+  template:
     spec:
-      template:
-        spec:
-          serviceAccountName: kube-burner-user
-          containers:
-            - name: kube-burner
-              image: quay.io/elmiko/kube-burner:latest
-              args:
-                - "ocp"
-                - "cluster-scaling"
-                - "--iterations=6"
-                - "--churn-duration=10m"
-                - "--churn-delay=45m"
-          restartPolicy: "Never"
-
----
-# third job will run for 30 minutes and should scale in
-apiVersion: batch/v1
-kind: CronJob
-metadata:
-  name: burner-3
-  namespace: kb-burner
-spec:
-  timeZone: EST
-  schedule: "20 16 * * *" # allow 10 minutes for cleanup of previous artifacts
-  jobTemplate:
-    spec:
-      template:
-        spec:
-          serviceAccountName: kube-burner-user
-          containers:
-            - name: kube-burner
-              image: quay.io/elmiko/kube-burner:latest
-              args:
-                - "ocp"
-                - "cluster-scaling"
-                - "--iterations=1"
-                - "--churn-duration=10m"
-                - "--churn-delay=25m"
-          restartPolicy: "Never"
-
+      serviceAccountName: kube-burner-user
+      containers:
+        - name: pykb-runner
+          image: quay.io/elmiko/pykb-runner:latest
+          pullPolicy: Always
+          volumeMounts:
+            - name: config
+              mountPath: "/etc/pykb-runner"
+              readOnly: true
+      restartPolicy: Never
+      volumes:
+        - name: config
+          configMap:
+            name: pykb-config
+  backoffLimit: 4
