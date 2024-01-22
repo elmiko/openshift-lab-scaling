@@ -13,7 +13,7 @@ These tests just run the kube-burner to make sure that things are working proper
 * `kube-burner-job-basic.yaml` - a job with custom kube-burner image using the cluster-scaling workflow.
 
 These tests will invoke the pykb-runner to run a series of kube-burner tests.
-* `two-hour-scaling-test.yaml` - deploys test workloads that will grow and shrink the cluster.
+* `three-hour-scaling-test.yaml` - deploys test workloads that will grow and shrink the cluster.
 
 **Tool to help**
 * `pykb-runner` - this directory contains a wrapper script for executing serial kube-runner runs from within the cluster.

@@ -16,6 +16,12 @@ data:
       - iterations: 5
         churn-duration: 10m
         churn-delay: 30m
+      - iterations: 4
+        churn-duration: 10m
+        churn-delay: 15m
+      - iterations: 10
+        churn-duration: 10m
+        churn-delay: 45m
       - iterations: 1
         churn-duration: 10m
         churn-delay: 30m
