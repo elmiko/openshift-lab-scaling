@@ -17,3 +17,11 @@ These tests will invoke the pykb-runner to run a series of kube-burner tests.
 
 **Tool to help**
 * `pykb-runner` - this directory contains a wrapper script for executing serial kube-runner runs from within the cluster.
+
+## End to End testing
+
+The `k7r-e2e.sh` script launches the entire testing process. It creates the cluster, sets up karpenter, runs the tests, collect artifacts and terminates the cluster. All scripts and configurations used in this workflow are marked with the "e2e" extension.
+
+## GitPod support
+
+If you launch this repository on https://gitpod.io/#https://github.com/elmiko/openshift-lab-scaling.git it will be provisioned with all necessary tools and libraries installed, ready for development. (see `.gitpod.yml` and `.gitpod.Dockerfile`)

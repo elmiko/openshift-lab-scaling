@@ -1,0 +1,36 @@
+# gitpod.io/#github.com/CaravanaCloud/k7r-pod
+
+image:
+  file: .gitpod.Dockerfile
+
+tasks:
+  - name: Welcome
+    init: |
+      mkdir -p "$HOME/.kube"
+      echo "Init k7r-pod at $(date)"
+    command: echo "Let's karpenter $(date) :)"
+
+# ports:
+#  - port: 1337
+#    onOpen: ignore
+#    visibility: public
+
+
+vscode:
+  extensions:
+    - vscjava.vscode-java-pack
+    - vscjava.vscode-java-debug
+    - vscjava.vscode-java-dependency
+    - vscjava.vscode-java-test
+    - vscjava.vscode-maven
+    - redhat.java
+    - ms-azuretools.vscode-docker
+    - ms-python.python
+    - ms-toolsai.jupyter
+    - esbenp.prettier-vscode
+
+additionalRepositories:
+    - url: https://github.com/CaravanaCloud/sitting-ducks
+      checkoutLocation: sitting-ducks
+    - url: https://github.com/aws-ia/terraform-aws-eks-blueprints-addon
+      checkoutLocation: terraform-aws-eks-blueprints-addon
