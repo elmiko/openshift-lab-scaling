@@ -8,7 +8,9 @@ tasks:
     init: |
       mkdir -p "$HOME/.kube"
       echo "Init k7r-pod at $(date)"
-    command: echo "Let's karpenter $(date) :)"
+    command: |
+      aws sts get-caller-identity
+      echo "Let's karpenter $(date) :)"
 
 # ports:
 #  - port: 1337
