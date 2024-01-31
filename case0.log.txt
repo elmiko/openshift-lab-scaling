@@ -1,0 +1,2 @@
+Creating new cluster [k7r30053]
+> Creating /workspace/openshift-lab-scaling/.install-dir/k7r30053/install-config.yaml
