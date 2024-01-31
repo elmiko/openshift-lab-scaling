@@ -1,10 +1,62 @@
 accounts:
-  "767398003706": {} # lab-autoscaling
+  "767398003706": 
+    filters:
+      S3Bucket:
+        - "767398003706-sde-cur"
+      S3Object: # the resource type
+        - type: "glob"
+          value: "767398003706-sde-cur/*"
 
 account-blocklist:
   - "192912699999"
  
 resource-types:
+  targets:
+    # EC2
+    - EC2Address
+    - EC2ClientVpnEndpoint
+    - EC2ClientVpnEndpointAttachment
+    - EC2CustomerGateway
+    - EC2DHCPOption
+    - EC2DefaultSecurityGroupRule
+    - EC2EgressOnlyInternetGateway
+    - EC2Host
+    - EC2Image
+    - EC2Instance
+    - EC2InstanceConnectEndpoint
+    - EC2InternetGateway
+    - EC2InternetGatewayAttachment
+    - EC2KeyPair
+    - EC2LaunchTemplate
+    - EC2NATGateway
+    - EC2NetworkACL
+    - EC2NetworkInterface
+    - EC2PlacementGroup
+    - EC2RouteTable
+    - EC2SecurityGroup
+    - EC2Snapshot
+    - EC2SpotFleetRequest
+    - EC2Subnet
+    - EC2TGW
+    - EC2TGWAttachment
+    - EC2VPC
+    - EC2VPCEndpoint
+    - EC2VPCEndpointConnection
+    - EC2VPCEndpointServiceConfiguration
+    - EC2VPCPeeringConnection
+    - EC2VPNConnection
+    - EC2VPNGateway
+    - EC2VPNGatewayAttachment
+    - EC2Volume
+
+    - # VPC
+    - EC2VPC
+    - EC2VPCEndpoint
+    - EC2VPCEndpointConnection
+    - EC2VPCEndpointServiceConfiguration
+    - EC2VPCPeeringConnection
+    - OSVPCEndpoint
+
   excludes:
     - IAMGroup
     - IAMGroupPolicy
@@ -28,12 +80,14 @@ resource-types:
     - IAMUserPolicyAttachment
     - IAMUserSSHPublicKey
     - IAMVirtualMFADevice
+
     - Route53HealthCheck
     - Route53HostedZone
     - Route53ResolverEndpoint
     - Route53ResolverRule
     - Route53ResourceRecordSet
     - Route53TrafficPolicy
+    
     - ACMCertificate
     - ACMPCACertificateAuthority
     - ACMPCACertificateAuthorityState

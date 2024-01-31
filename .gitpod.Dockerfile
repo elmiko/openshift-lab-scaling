@@ -6,7 +6,7 @@ RUN bash -c "sudo install-packages direnv gettext mysql-client gnupg golang"
 RUN bash -c "sudo apt-get update"
 RUN bash -c "sudo pip install --upgrade pip"
 
-RUN bash -c "brew install helm"
+RUN bash -c "brew install helm aws-nuke"
 
 # AWS CLIs
 ARG AWS_URL="https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip"

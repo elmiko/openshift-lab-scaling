@@ -1,0 +1,33 @@
+name: Run e2e test suite
+
+on:
+  workflow_dispatch: {}
+
+jobs:
+  job0:
+    runs-on: ubuntu-latest
+    env:
+      AWS_REGION: us-east-1
+      PULL_SECRET: ${{ secrets.LAB_AS_PULL_SECRET }}
+      SSH_KEY: ${{ secrets.LAB_AS_SSH_KEY }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials (SANDBOX)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.LAB_AS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.LAB_AS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+      
+      - name: Check AWS authentication
+        run: aws sts get-caller-identity
+
+      - name: E2E tests
+        run: ./k7r-e2e.sh
+
+      - name: Check generated files
+        run: find .
+

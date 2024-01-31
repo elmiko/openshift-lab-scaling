@@ -10,6 +10,7 @@ tasks:
       ./install-openshift.sh
       echo "Init k7r-pod at $(date)"
     command: |
+      gp timeout set 12h
       aws sts get-caller-identity
       echo "Let's karpenter $(date) :)"
 
