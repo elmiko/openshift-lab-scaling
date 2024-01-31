@@ -12,7 +12,7 @@ export INSTALL_DIR="${DIR}/.install-dir/$CLUSTER_NAME"
 if ! command -v openshift-install &> /dev/null
 then
     echo "openshift-install could not be found. Installing..."
-    source ./install-openshift-install.sh
+    source ./install-openshift.sh
 fi
 
 echo "Creating new cluster [$ENV_ID]"
