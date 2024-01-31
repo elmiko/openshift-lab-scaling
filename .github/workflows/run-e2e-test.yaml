@@ -8,8 +8,8 @@ jobs:
     runs-on: ubuntu-latest
     env:
       AWS_REGION: us-east-1
-      PULL_SECRET: {{ secrets.LAB_AS_PULL_SECRET }}
-      SSH_KEY: {{ secrets.LAB_AS_SSH_KEY }}
+      PULL_SECRET: ${{ secrets.LAB_AS_PULL_SECRET }}
+      SSH_KEY: ${{ secrets.LAB_AS_SSH_KEY }}
 
     steps:
       - name: Checkout
