@@ -10,6 +10,7 @@ export CLUSTER_NAME="$ENV_ID"
 echo "Running e2e test [$TEST_CASE] on [$ENV_ID]"
 sleep 5
 
+export PATH=$DIR:$PATH
 if ! command -v openshift-install &> /dev/null
 then
     echo "openshift-install could not be found. Installing..."
@@ -22,6 +23,8 @@ source ./create-cluster.aws-e2e.sh
 echo "Checking cluster is accessible"
 oc cluster-info
 
+echo "Setup karpeneter"
+source ./setup-k7r.sh
 
 if [ -n "$TEST_CASE" ]; then
     echo "Running test case $TEST_CASE"
@@ -37,6 +40,9 @@ else
     echo "No test case passed, running no test case"
     # Code for the case where the variable is not set or is empty
 fi
+
+echo "Collect must-gather"
+oc adm must-gather --dest-dir ./.${ENV_ID}.must-gather
 
 echo "Destroying cluster [$ENV_ID]"
 source ./destroy-cluster.e2e.sh

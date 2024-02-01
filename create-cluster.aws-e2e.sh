@@ -12,7 +12,7 @@ export REGION="$(aws configure get region)"
 export PULL_SECRET=${PULL_SECRET:-$(cat $PULL_SECRET_FILE)}
 export SSH_KEY=$(cat $SSH_PUB_KEY_FILE)
 
-export INSTALL_DIR=${INSTALL_DIR:-$DIR/.install-dir}
+export INSTALL_DIR=${INSTALL_DIR:-$DIR/.${ENV_ID}.install-dir}
 rm -rf $INSTALL_DIR
 mkdir -p $INSTALL_DIR
 
