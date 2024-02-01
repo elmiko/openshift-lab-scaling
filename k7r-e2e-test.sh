@@ -17,13 +17,13 @@ then
     source ./install-openshift.sh
 fi
 
-echo "Creating new cluster [$ENV_ID]"
+echo "*** Creating new cluster [$ENV_ID]"
 source ./create-cluster.aws-e2e.sh
 
-echo "Checking cluster is accessible"
+echo "*** Checking cluster is accessible"
 oc cluster-info
 
-echo "Setup karpeneter"
+echo "*** Setup karpeneter"
 source ./setup-k7r.sh
 
 if [ -n "$TEST_CASE" ]; then
@@ -41,8 +41,11 @@ else
     # Code for the case where the variable is not set or is empty
 fi
 
-echo "Gathering cluster data"
+echo "*** Gathering cluster data"
 source ./collect-cluster.e2e.sh
 
-echo "Destroying cluster [$ENV_ID]"
+echo "*** DEBUG [DELETE LATER]"
+find .
+
+echo "*** Destroying cluster [$ENV_ID]"
 source ./destroy-cluster.e2e.sh
