@@ -1,7 +1,9 @@
 #!/bin/bash
 
 mkdir -p ./data
-aws s3 sync s3://767398003706-sde-cur ./data
+
+LAB_BUCKET=s3://767398003706-sde-cur
+aws s3 sync $LAB_BUCKET ./data
 
 PACKAGE_NAME="pandas"
 

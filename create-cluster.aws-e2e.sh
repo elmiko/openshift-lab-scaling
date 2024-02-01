@@ -7,12 +7,13 @@ RELEASE_IMAGE=quay.io/openshift-release-dev/ocp-release:${VERSION}-x86_64
 SSH_PUB_KEY_FILE="$HOME/.ssh/id_rsa.pub"
 
 export CLUSTER_BASE_DOMAIN="lab-scaling.devcluster.openshift.com"
-export REGION="$(aws configure get region)"
+export AWS_REGION="$(aws configure get region)"
+export REGION="$AWS_REGION"
 
 export PULL_SECRET=${PULL_SECRET:-$(cat $PULL_SECRET_FILE)}
 export SSH_KEY=$(cat $SSH_PUB_KEY_FILE)
 
-export INSTALL_DIR=${INSTALL_DIR:-$DIR/.${ENV_ID}.install-dir}
+export INSTALL_DIR=${INSTALL_DIR:-$DIR/.${ENV_ID}/install-dir}
 rm -rf $INSTALL_DIR
 mkdir -p $INSTALL_DIR
 

@@ -41,8 +41,8 @@ else
     # Code for the case where the variable is not set or is empty
 fi
 
-echo "Collect must-gather"
-oc adm must-gather --dest-dir ./.${ENV_ID}.must-gather
+echo "Gathering cluster data"
+source ./collect-cluster.e2e.sh
 
 echo "Destroying cluster [$ENV_ID]"
 source ./destroy-cluster.e2e.sh
