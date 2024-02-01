@@ -27,4 +27,5 @@ credentials-requests
 .install-config
 .manifests.*
 .install-dir
-
+.*.log.txt
+.data

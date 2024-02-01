@@ -6,11 +6,10 @@ export ENV_ID="k7r$RANDOM"
 export TEST_CASE="$1"
 
 export CLUSTER_NAME="$ENV_ID"
-export INSTALL_DIR="${DIR}/.install-dir/$CLUSTER_NAME"
 
 echo "Running e2e test [$TEST_CASE] on [$ENV_ID]"
 sleep 5
-# check if openshift-insall is not available
+
 if ! command -v openshift-install &> /dev/null
 then
     echo "openshift-install could not be found. Installing..."
