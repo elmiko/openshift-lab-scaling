@@ -22,6 +22,9 @@ mkdir -p ${INSTALL_DIR}
 envsubst < install-config.aws-e2e.env.yaml > ${INSTALL_DIR}/install-config.yaml 
 cp ${INSTALL_DIR}/install-config.yaml ${INSTALL_DIR}/install-config.bkp.yaml
 
+echo "Verify install-config"
+cat ${INSTALL_DIR}/install-config.yaml
+
 openshift-install create cluster --dir=$INSTALL_DIR --log-level=debug
 if [ $? -ne 0 ]; then
     echo "Create cluster failed, exiting."
