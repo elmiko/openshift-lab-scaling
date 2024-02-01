@@ -11,7 +11,7 @@ export AWS_REGION="${AWS_REGION:-$(aws configure get region)}"
 export REGION="$AWS_REGION"
 
 export PULL_SECRET=${PULL_SECRET:-$(cat $PULL_SECRET_FILE)}
-export SSH_KEY=$(cat $SSH_PUB_KEY_FILE)
+export SSH_KEY=${SSH_KEY:-$(cat $SSH_PUB_KEY_FILE)}
 
 export INSTALL_DIR=${INSTALL_DIR:-$DIR/.${ENV_ID}/install-dir}
 rm -rf $INSTALL_DIR
