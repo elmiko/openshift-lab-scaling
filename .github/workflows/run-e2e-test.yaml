@@ -27,3 +27,7 @@ jobs:
 
       - name: E2E tests
         run: ./k7r-e2e.sh
+
+      - name: Check generated files
+        run: find .
+
