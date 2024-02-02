@@ -10,8 +10,8 @@ fi
 
 export PREFIX="k7r"
 export TIMESTAMP="$(date +%m%d%H%M)"
-export CLASSIFIER=${TEST_CASE:-"e2e"}
-export ENV_ID="${PREFIX}.${TIMESTAMP}.${CLASSIFIER}"
+export TEST_CASE=${TEST_CASE:-"e2e"}
+export ENV_ID="${PREFIX}${TIMESTAMP}${TEST_CASE}"
 
 export CLUSTER_NAME="$ENV_ID"
 export CLUSTER_DIR="./.$CLUSTER_NAME"
