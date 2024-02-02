@@ -30,3 +30,6 @@ credentials-requests
 .*.log.txt
 .data
 .*.yaml
+
+
+.k7*

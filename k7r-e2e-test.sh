@@ -8,10 +8,10 @@ if [ -z "$TEST_CASE" ]; then
     echo "**** WARNING: no test case requested"
 fi
 
-export PREFIX="k7r"
-export TIMESTAMP="$(date +%y%m%d%H%M)"
+export PREFIX="k7"
+export TIMESTAMP="$(date +%m%d%H%M)"
 export CLASSIFIER=${TEST_CASE:-"e2e"}
-export ENV_ID="$PREFIX_$TIMESTAMP_$CLASSIFIER"
+export ENV_ID="${PREFIX}.${TIMESTAMP}.${CLASSIFIER}"
 
 export CLUSTER_NAME="$ENV_ID"
 export CLUSTER_DIR="./.$CLUSTER_NAME"
