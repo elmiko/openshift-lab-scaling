@@ -1,3 +1,0 @@
-Running e2e test [case0] on [k7r7385]
-Creating new cluster [k7r7385]
-> Creating /workspace/openshift-lab-scaling/.install-dir/k7r7385/install-config.yaml
