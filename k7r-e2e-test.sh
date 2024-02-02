@@ -8,7 +8,7 @@ if [ -z "$TEST_CASE" ]; then
     echo "**** WARNING: no test case requested"
 fi
 
-export PREFIX="k7"
+export PREFIX="k7r"
 export TIMESTAMP="$(date +%m%d%H%M)"
 export CLASSIFIER=${TEST_CASE:-"e2e"}
 export ENV_ID="${PREFIX}.${TIMESTAMP}.${CLASSIFIER}"
