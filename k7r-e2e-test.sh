@@ -2,8 +2,16 @@
 set -x
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
-export ENV_ID="k7r$RANDOM"
 export TEST_CASE="$1"
+
+if [ -z "$TEST_CASE" ]; then
+    echo "WARNING: no test case requested"
+fi
+
+export PREFIX="k7r"
+export TIMESTAMP="$(date +%y%m%d%H%M)"
+export CLASSIFIER=${TEST_CASE:-"e2e"}
+export ENV_ID="$PREFIX_$TIMESTAMP_$CLASSIFIER"
 
 export CLUSTER_NAME="$ENV_ID"
 
