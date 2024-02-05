@@ -55,4 +55,4 @@ source ./destroy-cluster.e2e.sh | tee "${CLUSTER_DIR}/.destroy-cluster.log.txt"
 
 source ./k7r-e2e-prune.sh | tee "${CLUSTER_DIR}/.prune-cluster.log.txt"
 
-echo "## Done e2e test case [$TEST_CASE] on [$ENV_ID]"
+echo "## Done e2e test case [$TEST_CASE] on [$ENV_ID]" | tee   "${CLUSTER_DIR}/.k7r-e2e-test-done.log.txt"

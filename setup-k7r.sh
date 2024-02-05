@@ -25,7 +25,7 @@ aws ec2 create-tags --region $AWS_REGION --tags "Key=karpenter.sh/discovery,Valu
 
 echo "## Setup namespace and credentials"
 curl -o .base.yaml  https://raw.githubusercontent.com/mtulio/mtulio.labs/lab-kube-scaling/labs/ocp-aws-scaling/deploy-karpenter/setup/base.yaml
-oc apply -f base.yaml
+oc apply -f .base.yaml
 
 echo "## Deploy the csr-approver"
 curl -o .csr-approver.yaml https://raw.githubusercontent.com/mtulio/mtulio.labs/lab-kube-scaling/labs/ocp-aws-scaling/deploy-karpenter/setup/csr-approver.yaml
@@ -46,13 +46,14 @@ EOF
 
 echo "## Provision the infra required by Karpenter"
 # Based in https://raw.githubusercontent.com/aws/karpenter-provider-aws/v0.33.1/website/content/en/preview/getting-started/getting-started-with-karpenter/cloudformation.yaml
-wget -qO /tmp/karpenter-template.yaml https://raw.githubusercontent.com/mtulio/mtulio.labs/lab-kube-scaling/labs/ocp-aws-scaling/deploy-karpenter/setup/cloudformation.yaml
+curl -o "${CLUSTER_DIR}/karpenter-template.yaml" https://raw.githubusercontent.com/mtulio/mtulio.labs/lab-kube-scaling/labs/ocp-aws-scaling/deploy-karpenter/setup/cloudformation.yaml
+
 aws cloudformation create-stack \
-    --region ${AWS_REGION} \
-    --stack-name karpenter-${CLUSTER_NAME} \
-    --template-body file:///tmp/karpenter-template.yaml \
+    --region "${AWS_REGION}" \
+    --stack-name "karpenter-${CLUSTER_NAME}" \
+    --template-body "file://${CLUSTER_DIR}/karpenter-template.yaml" \
     --parameters \
-        ParameterKey=ClusterName,ParameterValue=${CLUSTER_NAME}
+        "ParameterKey=ClusterName,ParameterValue=${CLUSTER_NAME}"
 
 aws cloudformation wait stack-create-complete \
     --region ${AWS_REGION} \
@@ -126,9 +127,10 @@ TAG_NAME=$TAG_NAME
 EOF
 
 
-echo "## Create Karpenter Node Class"
 NODE_CLASS_NAME=default
-NODE_CLASS_FILENAME=./karpenter-nodeClass-$NODE_CLASS_NAME.yaml
+NODE_CLASS_FILENAME="${CLUSTER_DIR}/karpenter-nodeClass-$NODE_CLASS_NAME.yaml"
+echo "## Create Karpenter Node Class [$NODE_CLASS_NAME][$NODE_CLASS_FILENAME]"
+
 cat << EOF > $NODE_CLASS_FILENAME
 ---
 apiVersion: karpenter.k8s.aws/v1beta1
@@ -155,7 +157,7 @@ spec:
     $MACHINESET_USER_DATA
 EOF
 
-echo "Review and create"
+echo "## Review and create"
 
 # Check if all vars have been replaced in ./kpt-provisioner-m6.yaml
 cat $NODE_CLASS_FILENAME
@@ -163,4 +165,4 @@ cat $NODE_CLASS_FILENAME
 # Apply the config
 oc create -f $NODE_CLASS_FILENAME
 
-echo "## Karpenter setup completed"
+echo "## Karpenter setup completed" 
