@@ -36,8 +36,8 @@ echo "## Verify install-config"
 cat ${INSTALL_DIR}/install-config.yaml
 
 echo "## Creating cluster [$CLUSTER_NAME] from [$INSTALL_DIR]"
-LOG_LEVEL="debug"
-openshift-install create cluster --dir=$INSTALL_DIR --log-level="$LOG_LEVEL"
+LOG_LEVEL=${LOG_LEVEL:-'info'}
+openshift-install create cluster --dir="$INSTALL_DIR" --log-level="$LOG_LEVEL"
 if [ $? -ne 0 ]; then
     echo "## Create cluster [$CLUSTER_NAME] failed, exiting."
     exit 1

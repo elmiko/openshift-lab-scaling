@@ -1,4 +1,5 @@
 #!/bin/bash
 
 echo "Garbage collection :)"
-rm -rf ./.k7r_*
+rm -rf ./.output
+
