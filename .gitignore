@@ -27,4 +27,12 @@ credentials-requests
 .install-config
 .manifests.*
 .install-dir
+.*.log.txt
+.data
+.*.yaml
 
+
+.k7*
+
+# new single-ignore output
+.output

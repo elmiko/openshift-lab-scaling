@@ -59,7 +59,7 @@ mv  "${TEMP_INSTALLER}/kubectl" "${DIR}"
 rm "${TEMP_INSTALLER}/${FILE_INSTALLER}" 
 "${DIR}/oc" version client
 
-echo "System links"
+echo "System links to PATH"
 sudo ln -s "${DIR}/kubectl" "/usr/local/bin/kubectl"
 sudo ln -s "${DIR}/oc" "/usr/local/bin/oc"
 sudo ln -s "${DIR}/openshift-install" "/usr/local/bin/openshift-install" 
