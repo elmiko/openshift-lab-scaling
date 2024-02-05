@@ -41,7 +41,7 @@ jobs:
  #       run: aws-nuke resource-types
 
       - name: Try aws-nuke
-        run: aws-nuke -c ./aws-nuke.yaml --no-dry-run --force --force-sleep 3 | tee aws-nuke.log
+        run: aws-nuke -c ./aws-nuke.account.yaml --no-dry-run --force --force-sleep 3 | tee .aws-nuke.log.txt
         continue-on-error: true
 
       - name: Preserve log

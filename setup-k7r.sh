@@ -1,11 +1,11 @@
 #!/bin/bash
 
-echo "Setting up karpenter"
+echo "## Setting up karpenter"
 
-echo "Scaling down machine set"
+echo "## Scaling down machine set"
 oc scale machineset -n openshift-machine-api --replicas=0 $(oc get machineset -n openshift-machine-api -o jsonpath='{.items[2].metadata.name}')
 
-echo "Create subnet tags to Karpenter discover only private subnets to spin-up nodes"
+echo "## Create subnet tags to Karpenter discover only private subnets to spin-up nodes"
 # Get the cluster VPC from existing node sub#net
 export AWS_REGION=${AWS_REGION:-$(aws configure get region)}
 export CLUSTER_ID=$(oc get infrastructures cluster -o jsonpath='{.status.infrastructureName}')
@@ -23,15 +23,15 @@ aws ec2 create-tags --region $AWS_REGION --tags "Key=karpenter.sh/discovery,Valu
     | jq -r '.Subnets[] | [{"Id": .SubnetId, "Name": (.Tags[] | select(.Key=="Name").Value) }]' \
     | jq -r '.[] | select(.Name | contains("private")).Id'  | tr '\n' ' ')
 
-echo "Setup namespace and credentials"
+echo "## Setup namespace and credentials"
 curl -o .base.yaml  https://raw.githubusercontent.com/mtulio/mtulio.labs/lab-kube-scaling/labs/ocp-aws-scaling/deploy-karpenter/setup/base.yaml
 oc apply -f base.yaml
 
-echo "Deploy the csr-approver"
+echo "## Deploy the csr-approver"
 curl -o .csr-approver.yaml https://raw.githubusercontent.com/mtulio/mtulio.labs/lab-kube-scaling/labs/ocp-aws-scaling/deploy-karpenter/setup/csr-approver.yaml
 oc apply -f .csr-approver.yaml
 
-echo "Export Required variables" 
+echo "## Export Required variables" 
 export KARPENTER_NAMESPACE=karpenter
 export KARPENTER_VERSION=v0.33.1
 export WORKER_PROFILE=$(oc get machineset -n openshift-machine-api $(oc get machineset -n openshift-machine-api -o jsonpath='{.items[0].metadata.name}') -o json | jq -r '.spec.template.spec.providerSpec.value.iamInstanceProfile.id')
@@ -44,7 +44,7 @@ CLUSTER_NAME=$CLUSTER_NAME
 WORKER_PROFILE=$WORKER_PROFILE
 EOF
 
-echo "Provision the infra required by Karpenter"
+echo "## Provision the infra required by Karpenter"
 # Based in https://raw.githubusercontent.com/aws/karpenter-provider-aws/v0.33.1/website/content/en/preview/getting-started/getting-started-with-karpenter/cloudformation.yaml
 wget -qO /tmp/karpenter-template.yaml https://raw.githubusercontent.com/mtulio/mtulio.labs/lab-kube-scaling/labs/ocp-aws-scaling/deploy-karpenter/setup/cloudformation.yaml
 aws cloudformation create-stack \
@@ -58,7 +58,7 @@ aws cloudformation wait stack-create-complete \
     --region ${AWS_REGION} \
     --stack-name karpenter-${CLUSTER_NAME}
 
-echo "Install Karpenter with helm"
+echo "## Install Karpenter with helm"
 helm upgrade --install --namespace karpenter \
   karpenter oci://public.ecr.aws/karpenter/karpenter \
   --version $KARPENTER_VERSION \
@@ -67,7 +67,7 @@ helm upgrade --install --namespace karpenter \
   --set "settings.interruptionQueue=${CLUSTER_NAME}" \
   --set "settings.cluster-endpoint=$KUBE_ENDPOINT"
 
-echo "Patch the cluster to enable Karpenter"
+echo "## Patch the cluster to enable Karpenter"
 #
 # Patches
 #
@@ -98,7 +98,7 @@ oc patch clusterrole karpenter --type=json -p '[{
   }]'
 
 
-echo "Setup Karpenter for test variants"
+echo "## Setup Karpenter for test variants"
 
 INFRA_NAME=$(oc get infrastructure cluster -o jsonpath='{.status.infrastructureName}')
 MACHINESET_SG_NAME=$(oc get machineset -n openshift-machine-api $MACHINESET_NAME -o json | jq -r '.spec.template.spec.providerSpec.value.securityGroups[0].filters[0].values[0]')
@@ -126,7 +126,7 @@ TAG_NAME=$TAG_NAME
 EOF
 
 
-echo "Create Karpenter Node Class"
+echo "## Create Karpenter Node Class"
 NODE_CLASS_NAME=default
 NODE_CLASS_FILENAME=./karpenter-nodeClass-$NODE_CLASS_NAME.yaml
 cat << EOF > $NODE_CLASS_FILENAME
@@ -163,4 +163,4 @@ cat $NODE_CLASS_FILENAME
 # Apply the config
 oc create -f $NODE_CLASS_FILENAME
 
-echo "Karpenter setup completed"
+echo "## Karpenter setup completed"
