@@ -33,3 +33,6 @@ credentials-requests
 
 
 .k7*
+
+# new single-ignore output
+.output
