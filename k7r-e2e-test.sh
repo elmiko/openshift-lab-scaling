@@ -15,6 +15,7 @@ export ENV_ID="${PREFIX}${TIMESTAMP}${TEST_CASE}"
 
 export CLUSTER_NAME="$ENV_ID"
 export CLUSTER_DIR="./.output/.$CLUSTER_NAME"
+export INSTALL_DIR="${INSTALL_DIR:-$CLUSTER_DIR/install-dir}"
 
 echo "## Running e2e test [$TEST_CASE] on [$ENV_ID]"
 mkdir -p "$CLUSTER_DIR"
