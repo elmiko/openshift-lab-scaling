@@ -1,0 +1,67 @@
+---
+apiVersion: machine.openshift.io/v1beta1
+kind: MachineSet
+metadata:
+  labels:
+    machine.openshift.io/cluster-api-cluster: {cluster_api_cluster}
+  name: {machineset_name}
+  namespace: openshift-machine-api
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      machine.openshift.io/cluster-api-cluster: {cluster_api_cluster}
+      machine.openshift.io/cluster-api-machineset: {machineset_name}
+  template:
+    metadata:
+      labels:
+        machine.openshift.io/cluster-api-cluster: {cluster_api_cluster}
+        machine.openshift.io/cluster-api-machine-role: worker
+        machine.openshift.io/cluster-api-machine-type: worker
+        machine.openshift.io/cluster-api-machineset: {machineset_name}
+    spec:
+      lifecycleHooks: {{}}
+      metadata: {{}}
+      providerSpec:
+        value:
+          ami:
+            id: ami-0b577c67f5371f6d1
+          apiVersion: machine.openshift.io/v1beta1
+          blockDevices:
+          - ebs:
+              encrypted: true
+              iops: 0
+              kmsKey:
+                arn: ""
+              volumeSize: 120
+              volumeType: gp3
+          credentialsSecret:
+            name: aws-cloud-credentials
+          deviceIndex: 0
+          iamInstanceProfile:
+            id: {iam_instance_profile_id}
+          instanceType: {instance_type}
+          kind: AWSMachineProviderConfig
+          metadata:
+            creationTimestamp: null
+          metadataServiceOptions: {{}}
+          placement:
+            availabilityZone: {placement_zone}
+            region: {placement_region}
+          securityGroups:
+          - filters:
+            - name: tag:Name
+              values:
+              - {security_group_filter}
+          subnet:
+            filters:
+            - name: tag:Name
+              values:
+              - {subnet_filter}
+          tags:
+          - name: {owned_tag}
+            value: owned
+          - name: cluster_name
+            value: {cluster_name_value}
+          userDataSecret:
+            name: worker-user-data
