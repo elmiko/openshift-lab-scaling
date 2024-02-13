@@ -34,5 +34,7 @@ credentials-requests
 
 .k7*
 
-# new single-ignore output
+# new reduced ignore list
 .output
+bin
+data

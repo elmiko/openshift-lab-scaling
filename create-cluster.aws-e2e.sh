@@ -8,7 +8,7 @@ export TEST_CASE=${TEST_CASE:-"debug"}
 export ENV_ID="${PREFIX}${TIMESTAMP}${TEST_CASE}"
 
 export CLUSTER_NAME="$ENV_ID"
-export CLUSTER_DIR="./.output/.$CLUSTER_NAME"
+export CLUSTER_DIR=${CLUSTER_DIR:-"./.output/.$CLUSTER_NAME"}
 
 export VERSION=${VERSION:-4.14.10}
 

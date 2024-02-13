@@ -1,6 +1,6 @@
 #!/bin/bash
-POOL_NAME=p1c2-m6xlarge-od-spot
-POOL_CONFIG_FILE=./karpenter-${POOL_NAME}.yaml
+POOL_NAME="p1c2-m6xlarge-od-spot"
+POOL_CONFIG_FILE="${CLUSTER_DIR}/karpenter-${POOL_NAME}.yaml"
 POOL_CAPCITY_TYPES="\"on-demand\", \"spot\""
 POOL_INSTANCE_FAMILY="\"m6i\""
 CLUSTER_LIMIT_CPU="40"
@@ -46,9 +46,12 @@ spec:
   weight: 10
 EOF
 
+echo "### Creating pool config"
 echo $POOL_CONFIG_FILE
 oc create -f $POOL_CONFIG_FILE
 
-echo "trigger test case"
+echo "### trigger test case"
 oc apply -f https://raw.githubusercontent.com/elmiko/openshift-lab-scaling/devel/setup.yaml
 oc apply -f https://raw.githubusercontent.com/elmiko/openshift-lab-scaling/devel/three-hour-scaling-test.yaml
+
+echo "### done test case"

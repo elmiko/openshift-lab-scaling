@@ -15,20 +15,25 @@ export ENV_ID="${PREFIX}${TIMESTAMP}${TEST_CASE}"
 
 export CLUSTER_NAME="$ENV_ID"
 export CLUSTER_DIR="./.output/.$CLUSTER_NAME"
+export LOGS_DIR="${CLUSTER_DIR}/logs"
 export INSTALL_DIR="${INSTALL_DIR:-$CLUSTER_DIR/install-dir}"
 
 echo "## Running e2e test [$TEST_CASE] on [$ENV_ID]"
 mkdir -p "$CLUSTER_DIR"
+mkdir -p "$LOGS_DIR"
 sleep 5
 
 echo "## Creating new cluster [$ENV_ID]"
-source ./create-cluster.aws-e2e.sh | tee "${CLUSTER_DIR}/.create-cluster.log.txt"
+LOG_FILE="${LOGS_DIR}/.$(date +%Y%m%d%H%M%S)-create-cluster.log.txt"
+source ./create-cluster.aws-e2e.sh | tee "$LOG_FILE"
 
 echo "## Checking cluster is accessible"
-oc cluster-info | tee "${CLUSTER_DIR}/.cluster-info.log.txt"
+LOG_FILE="${LOGS_DIR}/.$(date +%Y%m%d%H%M%S)-cluster-info.log.txt"
+oc cluster-info | tee "${LOG_FILE}"
 
 echo "## Setup karpeneter"
-source ./setup-k7r.sh | tee "${CLUSTER_DIR}/.setup-k7r.log.txt"
+LOG_FILE="${LOGS_DIR}/.$(date +%Y%m%d%H%M%S)-setup-k7r.log.txt"
+source ./setup-k7r.sh | tee "${LOG_FILE}"
 
 if [ -n "$TEST_CASE" ]; then
     echo "## Running test case $TEST_CASE"
@@ -36,9 +41,11 @@ if [ -n "$TEST_CASE" ]; then
     TEST_SCRIPT="./k7r-e2e-$TEST_CASE.sh"
     if [ -x "$TEST_SCRIPT" ]; then
         echo "## $TEST_SCRIPT found, executing..."
-        source $TEST_SCRIPT
+        LOG_FILE="${LOGS_DIR}/.$(date +%Y%m%d%H%M%S)-test-case.log.txt"
+        source $TEST_SCRIPT |  tee "${LOG_FILE}" 
     else
-        echo "## $TEST_SCRIPT not found"
+        LOG_FILE="${LOGS_DIR}/.$(date +%Y%m%d%H%M%S)-test-not-found.log.txt"
+        echo "## $TEST_SCRIPT not found" |  tee "${LOG_FILE}" 
     fi
 else
     echo "No test case passed, running no test case"
@@ -46,14 +53,21 @@ else
 fi
 
 echo "## Gathering cluster data [$ENV_ID]"
-source ./collect-cluster.e2e.sh | tee "${CLUSTER_DIR}/.collect-cluster.log.txt"
+LOG_FILE="${LOGS_DIR}/.$(date +%Y%m%d%H%M%S)-collect-cluster.log.txt"
+source ./collect-cluster.e2e.sh | tee "${LOG_FILE}"
 
-echo "## DEBUG [DELETE LATER]"
-find . | tee "${CLUSTER_DIR}/.find.log.txt"
+echo "## List FS (debug)"
+LOG_FILE="${LOGS_DIR}/.$(date +%Y%m%d%H%M%S)-find.log.txt"
+find . | tee "${LOG_FILE}"
 
 echo "## Destroying cluster [$ENV_ID]"
-source ./destroy-cluster.e2e.sh | tee "${CLUSTER_DIR}/.destroy-cluster.log.txt" 
+LOG_FILE="${LOGS_DIR}/.$(date +%Y%m%d%H%M%S)-destroy-cluster.log.txt"
+source ./destroy-cluster.e2e.sh | tee "${CLUSTER_DIR}/" 
 
-source ./k7r-e2e-prune.sh | tee "${CLUSTER_DIR}/.prune-cluster.log.txt"
+echo "## Prune environment [$ENV_ID]"
+LOG_FILE="${LOGS_DIR}/.$(date +%Y%m%d%H%M%S)-prune-cluster.log.txt"
+source ./k7r-e2e-prune.sh | tee "${CLUSTER_DIR}/"
 
-echo "## Done e2e test case [$TEST_CASE] on [$ENV_ID]" | tee   "${CLUSTER_DIR}/.k7r-e2e-test-done.log.txt"
+LOG_FILE="${LOGS_DIR}/.$(date +%Y%m%d%H%M%S)-k7r-e2e-test-done.log.txt"
+echo "## Done e2e test case [$TEST_CASE] on [$ENV_ID]" | tee "$LOG_FILE"
+

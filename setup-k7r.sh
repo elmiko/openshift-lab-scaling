@@ -8,6 +8,7 @@ oc scale machineset -n openshift-machine-api --replicas=0 $(oc get machineset -n
 echo "## Create subnet tags to Karpenter discover only private subnets to spin-up nodes"
 # Get the cluster VPC from existing node sub#net
 export AWS_REGION=${AWS_REGION:-$(aws configure get region)}
+export REGION=$AWS_REGION
 export CLUSTER_ID=$(oc get infrastructures cluster -o jsonpath='{.status.infrastructureName}')
 export MACHINESET_NAME=$(oc get machineset -n openshift-machine-api -o jsonpath='{.items[0].metadata.name}')
 export MACHINESET_SUBNET_NAME=$(oc get machineset -n openshift-machine-api $MACHINESET_NAME -o json | jq -r '.spec.template.spec.providerSpec.value.subnet.filters[0].values[0]')
@@ -24,12 +25,14 @@ aws ec2 create-tags --region $AWS_REGION --tags "Key=karpenter.sh/discovery,Valu
     | jq -r '.[] | select(.Name | contains("private")).Id'  | tr '\n' ' ')
 
 echo "## Setup namespace and credentials"
-curl -o .base.yaml  https://raw.githubusercontent.com/mtulio/mtulio.labs/lab-kube-scaling/labs/ocp-aws-scaling/deploy-karpenter/setup/base.yaml
-oc apply -f .base.yaml
+LOCAL_FILE="${CLUSTER_DIR}/.base.yaml"
+curl -o "$LOCAL_FILE" https://raw.githubusercontent.com/mtulio/mtulio.labs/lab-kube-scaling/labs/ocp-aws-scaling/deploy-karpenter/setup/base.yaml
+oc apply -f "$LOCAL_FILE"
 
 echo "## Deploy the csr-approver"
-curl -o .csr-approver.yaml https://raw.githubusercontent.com/mtulio/mtulio.labs/lab-kube-scaling/labs/ocp-aws-scaling/deploy-karpenter/setup/csr-approver.yaml
-oc apply -f .csr-approver.yaml
+LOCAL_FILE="${CLUSTER_DIR}/.csr-approver.yaml"
+curl -o "$LOCAL_FILE" https://raw.githubusercontent.com/mtulio/mtulio.labs/lab-kube-scaling/labs/ocp-aws-scaling/deploy-karpenter/setup/csr-approver.yaml
+oc apply -f "$LOCAL_FILE"
 
 echo "## Export Required variables" 
 export KARPENTER_NAMESPACE=karpenter
@@ -165,4 +168,4 @@ cat $NODE_CLASS_FILENAME
 # Apply the config
 oc create -f $NODE_CLASS_FILENAME
 
-echo "## Karpenter setup completed" 
+echo "## Karpenter setup for cluster [$CLUSTER_NAME] completed" 

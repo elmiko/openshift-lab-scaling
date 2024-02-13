@@ -1,5 +1,5 @@
 #!/bin/bash
-
+#./k7r-e2e.sh | tee ./.k7r-e2e.log.txt
 export PATH=$DIR:$PATH
 if ! command -v openshift-install &> /dev/null
 then
@@ -7,8 +7,8 @@ then
     source ./install-openshift.sh
 fi
 
-echo "## Running end-to-end test - case0 (dry run)"
-./k7r-e2e-test.sh case0 
+echo "## Running end-to-end test - dry run"
+./k7r-e2e-test.sh dryrun 
 
 echo " ## Running end-to-end test - phase1 - case 1"
 ./k7r-e2e-test.sh p1c1
