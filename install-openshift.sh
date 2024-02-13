@@ -5,14 +5,17 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 #BASE_URL="https://openshift-release-artifacts.apps.ci.l2s4.p1.openshiftapps.com"
 #VERSION_TAG="4.15.0-rc.2"
+
 BASE_URL="https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/latest"
-VERSION_TAG="4.14.10" 
+VERSION_TAG="4.14.11" 
+
+mkdir -p "${DIR}/bin"
 
 # Clean
-rm -f "${DIR}/openshift-install"
-rm -f "${DIR}/ccoctl"
-rm -f "${DIR}/oc"
-rm -f "${DIR}/kubectl"
+rm -f "${DIR}/bin/openshift-install"
+rm -f "${DIR}/bin/ccoctl"
+rm -f "${DIR}/bin/oc"
+rm -f "${DIR}/bin/kubectl"
 
 
 # Download openshift-install
@@ -60,10 +63,10 @@ rm "${TEMP_INSTALLER}/${FILE_INSTALLER}"
 "${DIR}/oc" version client
 
 echo "System links to PATH"
-sudo ln -s "${DIR}/kubectl" "/usr/local/bin/kubectl"
-sudo ln -s "${DIR}/oc" "/usr/local/bin/oc"
-sudo ln -s "${DIR}/openshift-install" "/usr/local/bin/openshift-install" 
-sudo ln -s "${DIR}/ccoctl" "/usr/local/bin/ccoctl" 
+sudo ln -sf "${DIR}/kubectl" "/usr/local/bin/kubectl"
+sudo ln -sf "${DIR}/oc" "/usr/local/bin/oc"
+sudo ln -sf "${DIR}/openshift-install" "/usr/local/bin/openshift-install" 
+sudo ln -sf "${DIR}/ccoctl" "/usr/local/bin/ccoctl" 
 
 oc version client
 

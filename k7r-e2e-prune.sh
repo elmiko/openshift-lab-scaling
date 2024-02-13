@@ -1,9 +1,9 @@
 #!/bin/bash
 
 TAG_NAME="cluster_name"
-TAG_VALE="$CLUSTER_NAME"
+TAG_VALUE="$CLUSTER_NAME"
 
-echo "## Done pruning cluster [$TAG_NAME=$TAG_VALUE]" 
+echo "## Started pruning cluster [$TAG_NAME=$TAG_VALUE]" 
 
 echo "## Terminating instances" 
 # Terminate EC2 instances
